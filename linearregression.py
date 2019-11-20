@@ -28,10 +28,13 @@ from mpl_toolkits.mplot3d import Axes3D
 def gradientDescent(x, y, theta, alpha, m, maxsteps):
     # HERE YOU HAVE TO IMPLEMENT THE UPDATE OF THE PARAMETERS
     thetaHist = np.empty([maxsteps, 2])
+    m = len(y)
     xTrans = x.transpose()
     for i in range(0, maxsteps):
-        # theta = theta - ???
-        thetaHist[i] = theta
+        #Multiply x and theta
+        y_pred = np.dot(x,theta)
+        theta = theta - (1/m) * alpha * (x.T.dot((y_pred - y)))
+        thetaHist[i,:] = theta.T
 
     return theta, thetaHist
 
@@ -55,8 +58,8 @@ model = LinearRegression().fit(x_train, y_train)
 print(model.coef_)
 
 # Plot training set
-fig = plt.figure(1)  # An empty figure with no axes
-plt.plot(x[:, 1], y,'x', model.coef_)
+#fig = plt.figure(1)  # An empty figure with no axes
+plt.plot(x[:, 1], y, model.coef_)
 
 # Also it is useful for simple test cases to not just run an optimization
 # but first to do a systematic search. So let us first calculate the values
@@ -64,25 +67,29 @@ plt.plot(x[:, 1], y,'x', model.coef_)
 theta0 = np.arange(-2, 2.01, 0.25)
 theta1 = np.arange(-2, 3.01, 0.25)
 
-# Calculate values of the cost function
-#for i in range(0, len(theta0)):
-#    for j in range(0, len(theta1)):
-# HERE YOU HAVE TO ADD THE COST FUNCTION FROM THE LECTURE
-# J(i,j) = ???
+J = np.zeros((len(theta0), len(theta1)))
 
-# Let us do some test plots to see the cost function J and to analyze how
+for i in range(0, len(theta0)):
+    for j in range(0, len(theta1)):
+        theta_transpose = np.array((theta0[i], theta1[j]))
+        m = len(y)
+        y_pred = x.dot(theta_transpose)
+        se = (y_pred - y)**2
+        mse = 1/(2*m) * np.sum(se)
+        J[i,j] = mse
+    # Let us do some test plots to see the cost function J and to analyze how
 # it depends on the parameters theta0 and theta1
 theta0, theta1 = np.meshgrid(theta0, theta1)
 fig2 = plt.figure(2)
 ax = fig2.add_subplot(121, projection="3d")
-#surf = ax.plot_surface(theta0, theta1, np.transpose(J))
+surf = ax.plot_surface(theta0, theta1, np.transpose(J))
 ax.set_xlabel('theta 0')
 ax.set_ylabel('theta 1')
 ax.set_zlabel('Cost J')
 ax.set_title('Cost function Surface plot')
-
 ax = fig2.add_subplot(122)
-#contour = ax.contour(theta0, theta1, np.transpose(J))
+
+contour = ax.contour(theta0, theta1, np.transpose(J))
 ax.set_xlabel('theta 0')
 ax.set_ylabel('theta 1')
 ax.set_title('Cost function Contour plot')
