@@ -46,20 +46,14 @@ def gradientDescent(x, y, theta, alpha, m, maxsteps):
 x = np.array([[1, 0], [1, 0.5], [1, 1], [1, 1.5], [1, 2], [1, 2.5], [1, 3], [1, 4], [1, 5]])
 y = np.array([0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5])
 
-print(x)
 # Calculate length of training set
 m, n = np.shape(x)
 print(' m size ',m)
 print(' n size ',n)
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
-
-model = LinearRegression().fit(x_train, y_train)
-print(model.coef_)
-
 # Plot training set
-#fig = plt.figure(1)  # An empty figure with no axes
-plt.plot(x[:, 1], y, model.coef_)
+fig = plt.figure(1)  # An empty figure with no axes
+plt.plot(x[:, 1], y, 'x')
 
 # Also it is useful for simple test cases to not just run an optimization
 # but first to do a systematic search. So let us first calculate the values
@@ -87,14 +81,15 @@ ax.set_xlabel('theta 0')
 ax.set_ylabel('theta 1')
 ax.set_zlabel('Cost J')
 ax.set_title('Cost function Surface plot')
-ax = fig2.add_subplot(122)
 
+ax = fig2.add_subplot(122)
 contour = ax.contour(theta0, theta1, np.transpose(J))
 ax.set_xlabel('theta 0')
 ax.set_ylabel('theta 1')
 ax.set_title('Cost function Contour plot')
 
 fig2.subplots_adjust(bottom=0.1, right=1.5, top=0.9)
+
 
 # Here we implement Gradient Descent
 alpha = 0.05  # learning parameter
@@ -105,7 +100,7 @@ thet = [2, 0]
 
 # HERE (FUNCTION gradientDescent) YOU HAVE TO IMPLEMENT THE UPDATE OF THE PARAMETERS
 thet, thetaHist = gradientDescent(x, y, thet, alpha, m, maxsteps)
-
+print(thet)
 # Print found optimal values
 print("Optimized Theta0 is ", thet[0])
 print("Optimized Theta1 is ", thet[1])
@@ -114,7 +109,7 @@ print("Optimized Theta1 is ", thet[1])
 # the contour plot of our cost function to see how it approaches the
 # desired minimum.
 fig3 = plt.figure(3)
-#plt.contour(theta0, theta1, np.transpose(J))
+plt.contour(theta0, theta1, np.transpose(J))
 plt.plot(thetaHist[:, 0], thetaHist[:, 1], 'x')
 ax.set_xlabel('theta 0')
 ax.set_ylabel('theta 1')
