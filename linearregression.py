@@ -38,6 +38,17 @@ def gradientDescent(x, y, theta, alpha, m, maxsteps):
 
     return theta, thetaHist
 
+def seperateGradientDescent(x, y, theta, alpha, m, maxsteps):
+    thetaHist = np.empty([maxsteps, 2])
+    xTrans = x.transpose()
+    for k in range(0,1):
+        for i in range(0,maxsteps):
+            y_pred=np.dot(x,theta)
+            theta[k]=(theta - (1/m) * alpha * ((xTrans.dot(y_pred - y))))[k]
+            thetaHist[i] = theta
+
+    return theta, thetaHist
+
 
 # Define some training data
 # To test your algorithm it is a good idea to start with very simple test data
